@@ -15,8 +15,10 @@ bool next_state=HIGH;
 double dd;
 
 float angres = (degrees/360)*pulse_per_rot;
-float A = -1 ,B = 2, C = -0.8 ,D = 1.2;
+float A = -1 ,B = 0, C = -1.8 ,D = 1.4;
+// not bad -> A = -1 ,B = 2, C = -0.8 ,D = 1.2;
 float e = 2.71828;
+float multiplier = 500;
 
 void motor_setup(){
   pinMode(pul, OUTPUT); 
@@ -41,7 +43,7 @@ float getDelay(float x){
   float y = -(pow(x-B,2)/(2*pow(C,2)));
   float ddelay = (A*pow(e,y))+D;
   Serial.println(ddelay); 
-  return ddelay*5000;
+  return ddelay*multiplier;
 }
 
 void cont_mv(float rpm){
@@ -70,17 +72,17 @@ void move60(){
 }
 
 void move60delay(bool var){
-  float k = 0, l = 0;
+  float k = 0, l = -4;
   digitalWrite(dir,var);
   while (k < angres){
     if (l < 4){
       float ddelay = getDelay(l);
-      Serial.println(ddelay);
+      //Serial.println(ddelay);
       digitalWrite(pul,HIGH);
       delayMicroseconds(ddelay);
       digitalWrite(pul,LOW);
       delayMicroseconds(ddelay);
-      l += 0.01498;
+      l += 0.0299625;
     }
     k += 1;
   }
@@ -108,6 +110,7 @@ void setup(){
 
 void loop(){
   move60delay(HIGH);
-  //move60delay(LOW);
+  delay(1000);
+  move60delay(LOW);
   delay(1000);
 }
