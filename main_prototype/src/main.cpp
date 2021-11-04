@@ -5,7 +5,8 @@
 #define en 6
 #define pulse_per_rot 1600
 
-float angularSpeed = 125;
+bool direction = LOW;
+float angularSpeed = 60;
 
 long stepperLastT= 0;
 int stepperState = LOW;
@@ -29,20 +30,21 @@ float getDelayDuration(float rpm) {
 }
 
 float getrpm(float x){
-  float y = (-(pow(x,2)/0.32));
+  float y = (-(pow(x-1,2)/0.32));
   float rpm = pow(e,y); 
+  return rpm*60;
 }
 
 void cont_mv(float rpm){
   if ((rpm != 0) && (micros() - stepperLastT >= dd)) {
     if (next_state == HIGH){
       digitalWrite(en, s_state);
-      digitalWrite(dir, HIGH); digitalWrite(pul, HIGH);
+      digitalWrite(dir, direction); digitalWrite(pul, HIGH);
       next_state = LOW;
     }
     if (next_state == LOW){
       digitalWrite(en, s_state);
-      digitalWrite(dir, HIGH); digitalWrite(pul, LOW);
+      digitalWrite(dir, direction); digitalWrite(pul, LOW);
       next_state = HIGH;
     }
     stepperLastT = micros();
@@ -58,14 +60,30 @@ void move60(){
   }
 }
 
+void gauss_loop(){
+  float k = 0, l = 0; 
+  while (k < 267){
+    if (l < 2){
+      float rpm = getrpm(l);
+      Serial.println(rpm);
+      dd = getDelayDuration(rpm);
+      cont_mv(rpm);
+      l += 0.007;
+    }
+    k += 1;
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   motor_setup();
-  dd = getDelayDuration(angularSpeed);
 }
 
 void loop(){
-  cont_mv(angularSpeed);
+  //Serial.println("loop");
+  //dd = getDelayDuration(angularSpeed);
+  //cont_mv(angularSpeed);
   //move60();
-  //delay(2000);
+  gauss_loop();
+  delay(1000);
 }
