@@ -11,9 +11,10 @@ float angularSpeed = 60;
 long stepperLastT= 0;
 int stepperState = LOW;
 bool s_state=0;
-bool next_state=LOW;
+bool next_state=HIGH;
 double dd;
 
+float A = -1 ,B = 2, C = -0.8 ,D = 1.2;
 float e = 2.71828;
 
 void motor_setup(){
@@ -31,8 +32,15 @@ float getDelayDuration(float rpm) {
 
 float getrpm(float x){
   float y = (-(pow(x-1,2)/0.32));
-  float rpm = pow(e,y); 
+  float rpm = 6*pow(e,y); 
   return rpm*60;
+}
+
+float getDelay(float x){
+  float y = -(pow(x-B,2)/(2*pow(C,2)));
+  float ddelay = (A*pow(e,y))+D;
+  Serial.println(ddelay); 
+  return ddelay*5000;
 }
 
 void cont_mv(float rpm){
@@ -54,23 +62,41 @@ void cont_mv(float rpm){
 void move60(){
   for(int x = 0; x < 267; x++){
     digitalWrite(pul,HIGH);
-    delayMicroseconds(500);
+    delayMicroseconds(5000);
     digitalWrite(pul,LOW);
-    delayMicroseconds(500);
+    delayMicroseconds(5000);
+  }
+}
+
+void move60delay(bool var){
+  float k = 0, l = 0;
+  digitalWrite(dir,var);
+  while (k < 267){
+    if (l < 4){
+      float ddelay = getDelay(l);
+      Serial.println(ddelay);
+      digitalWrite(pul,HIGH);
+      delayMicroseconds(ddelay);
+      digitalWrite(pul,LOW);
+      delayMicroseconds(ddelay);
+      l += 0.01498;
+    }
+    k += 1;
   }
 }
 
 void gauss_loop(){
-  float k = 0, l = 0; 
+  float k = 0, l = -0.5; 
   while (k < 267){
     if (l < 2){
       float rpm = getrpm(l);
       Serial.println(rpm);
       dd = getDelayDuration(rpm);
       cont_mv(rpm);
-      l += 0.007;
+      l += 0.009;
     }
     k += 1;
+    delayMicroseconds(5000);
   }
 }
 
@@ -84,6 +110,8 @@ void loop(){
   //dd = getDelayDuration(angularSpeed);
   //cont_mv(angularSpeed);
   //move60();
-  gauss_loop();
+  move60delay(HIGH);
+  move60delay(LOW);
+  //gauss_loop();
   delay(1000);
 }
