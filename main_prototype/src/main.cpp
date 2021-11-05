@@ -30,12 +30,12 @@ ________________________________________________________
 | 7   |     |     |     | 1.8 |     |     |       | 0.53|
 |_____|_____|_____|_____|_____|_____|_____|_______|_____|
 
-Notation:
+Notations:
 A         = height of the curve's peak
 B         = the position of the center of the peak
 C         = the standart deviation
-D         = offset from Y-0
-E1 and E2 = range of the desired area
+D         = offset from Y-0 (will determine the delay)
+E1 and E2 = range of the desired curve area
 F         = increment of the range associated with angres
 T(s)      = time needed each cycle
 
