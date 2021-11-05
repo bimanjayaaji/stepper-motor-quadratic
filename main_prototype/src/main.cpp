@@ -15,8 +15,17 @@ bool next_state=HIGH;
 double dd;
 
 float angres = (degrees/360)*pulse_per_rot;
-float A = -1 ,B = 0, C = -1.8 ,D = 1.4;
-// not bad -> A = -1 ,B = 2, C = -0.8 ,D = 1.2;
+float A = -1.8 ,B = 0 ,C = -1.5 ,D = 2;
+float E1 = -6, E2 = 6, F = (E2-E1)/angres;
+// notBad1 --> A = -1 ,B = 0, C = -0.8 ,D = 1.2;
+//             E1 = -2 ,E2 = 2 ,F = 0.01498 -- T = 0.39
+// notBad2 --> A = -1 ,B = 0, C = -1.8 ,D = 1;
+//             E1 = -4 ,E2 = 4 ,F = 0.02996 -- T = 0.32s
+// notBad3 --> A = -1 ,B = 0, C = -2.5 ,D = 1.3;
+//             E1 = -6 ,E2 = 6 ,F = 0.04494 -- T = 0.41s 
+// notBad4 --> A = -1.8 ,B = 0, C = -1.5 ,D = 2;
+//             E1 = -6 ,E2 = 6 ,F = 0.04494 -- T = 0.59s
+
 float e = 2.71828;
 float multiplier = 500;
 
@@ -72,20 +81,22 @@ void move60(){
 }
 
 void move60delay(bool var){
-  float k = 0, l = -4;
+  float k = 0, l = E1;
+  double start = millis();
   digitalWrite(dir,var);
   while (k < angres){
-    if (l < 4){
+    if (l < E2){
       float ddelay = getDelay(l);
       //Serial.println(ddelay);
       digitalWrite(pul,HIGH);
       delayMicroseconds(ddelay);
       digitalWrite(pul,LOW);
       delayMicroseconds(ddelay);
-      l += 0.0299625;
+      l += F;
     }
     k += 1;
   }
+  Serial.println((millis()-start)/1000);
 }
 
 void gauss_loop(){
