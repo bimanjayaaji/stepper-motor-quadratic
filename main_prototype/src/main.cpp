@@ -17,22 +17,8 @@ double dd;
 float angres = (degrees/360)*pulse_per_rot;
 float A = -1.8 ,B = 0 ,C = -1 ,D = 1.8;
 float E1 = -4, E2 = 4, F = (E2-E1)/angres;
-// notBad1 --> A = -1 ,B = 0, C = -0.8 ,D = 1.2;
-//             E1 = -2 ,E2 = 2 ,F = 0.01498 -- T = 0.39
-// notBad2 --> A = -1 ,B = 0, C = -1.8 ,D = 1;
-//             E1 = -4 ,E2 = 4 ,F = 0.02996 -- T = 0.32s
-// notBad3 --> A = -1 ,B = 0, C = -2.5 ,D = 1.3;
-//             E1 = -6 ,E2 = 6 ,F = 0.04494 -- T = 0.41s 
-// notBad4 --> A = -1.8 ,B = 0, C = -1.5 ,D = 2 or 1.8;
-//             E1 = -6 ,E2 = 6 ,F = 0.04494 -- T = 0.59s or 0.54s
-// notBad5 --> A = -1.8 ,B = 0, C = -1 ,D = 2;
-//             E1 = -4 ,E2 = 4 ,F = 0.02996 -- T = 0.59s 
-// notBad6 --> A = -1.8 ,B = 0, C = -1 ,D = 1.8;
-//             E1 = -4 ,E2 = 4 ,F = 0.02996 -- T = 0.53s
 
 /*
-
-
 ________________________________________________________
 | num | A   | B   | C   | D   | E1  | E2  |   F   | T(s)|
 | 1   | -1  | 0   | -0.8| 1.2 | -2  | 2   |0.01498| 0.39|
@@ -43,6 +29,15 @@ ________________________________________________________
 | 6   |     |     | -1  | 2   | -4  | 4   |0.02996| 0.59|
 | 7   |     |     |     | 1.8 |     |     |       | 0.53|
 |_____|_____|_____|_____|_____|_____|_____|_______|_____|
+
+Notation:
+A         = height of the curve's peak
+B         = the position of the center of the peak
+C         = the standart deviation
+D         = offset from Y-0
+E1 and E2 = range of the desired area
+F         = increment of the range associated with angres
+T(s)      = time needed each cycle
 
 */
 
